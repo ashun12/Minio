@@ -2,6 +2,13 @@ set -e
 disk=$(whiptail --inputbox "Hellow,Please Enter the Name of the raw disk🛢for minio (ex:- /dev/sdb /dev/sdc " --title "🛢 Disk Name 🛢" 10 70 3>&1 1>&2 2>&3 )
 user=$(whiptail --inputbox  "Please Enter MINIO Root UserName👤" --title "👤 User 👤" 10 45 3>&1 1>&2 2>&3 )
 pass=$(whiptail --passwordbox  "Please Enter MINIO Root Password🔑" --title "🔐 Password 🔐" 10 45 3>&1 1>&2 2>&3 )
+
+#Disable Firewall&SELinux
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
 sudo mkdir /minio
 if [ -f /etc/redhat-release ]; then
    sudo mkfs.xfs -f $disk
